@@ -1,0 +1,27 @@
+---
+If:
+  PathMatch: .*.(cc|h)
+CompileFlags:
+  Add: [-xc++, -Wall, -Wno-missing-prototypes]
+---
+If:
+  PathMatch: .*.cuh?
+CompileFlags:
+  Add: [-xcuda]
+  Remove:
+    [
+      -forward-unknown-to-host-compiler,
+      --generate-code=*,
+      -arch=native,
+      -rdc=true,
+    ]
+---
+Diagnostics:
+  # Tweak Clang-Tidy checks.
+  ClangTidy:
+    Add: [performance*, modernize*, readability*]
+    Remove: [modernize-use-trailing-return-type]
+    CheckOptions:
+      readability-identifier-naming.VariableCase: SnakeCase
+      readability-identifier-naming.ClassCase: CamelCase
+      readability-identifier-naming.Struct: CamelCase
